@@ -57,7 +57,7 @@ const RegisterPage = () => {
 
   return (
     <div className="flex w-full flex-col items-center justify-center">
-      <form className="w-1/4" onSubmit={handleRegister}>
+      <form className="w-2/3 md:w-1/2 xl:w-1/4" onSubmit={handleRegister}>
         <Card>
           <CardHeader>
             <CardTitle>Register</CardTitle>
@@ -74,6 +74,7 @@ const RegisterPage = () => {
                   name: e.target.value,
                 })
               }
+              required
             />
             <Input
               placeholder="Email"
@@ -85,6 +86,7 @@ const RegisterPage = () => {
                   email: e.target.value,
                 })
               }
+              required
             />
             <Input
               placeholder="Password"
@@ -96,6 +98,7 @@ const RegisterPage = () => {
                   password: e.target.value,
                 })
               }
+              required
             />
             <Button className="mt-2">Register</Button>
           </CardContent>

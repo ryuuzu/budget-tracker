@@ -39,7 +39,7 @@ const LoginPage = () => {
 
   return (
     <div className="flex w-full flex-col items-center justify-center">
-      <form className="w-1/4" onSubmit={handleLogin}>
+      <form className="w-2/3 md:w-1/2 xl:w-1/4" onSubmit={handleLogin}>
         <Card>
           <CardHeader>
             <CardTitle>Login</CardTitle>
@@ -65,7 +65,7 @@ const LoginPage = () => {
             <Button className="mt-2">Log In</Button>
           </CardContent>
           <CardFooter>
-            <p className="text-center text-sm w-full">
+            <p className="w-full text-center text-sm">
               Don't have an account?{' '}
               <Link to="/auth/register" className="text-primary">
                 Register
