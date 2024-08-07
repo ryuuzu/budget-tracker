@@ -41,7 +41,7 @@ const Dashboard = () => {
 
   // Hook to calculate total expense
   const totalExpense = useMemo(() => {
-    return transactions
+  return transactions
       .filter((transaction) => transaction.type === 'expense')
       .reduce((total, transaction) => total + transaction.amount, 0);
   }, [transactions]);

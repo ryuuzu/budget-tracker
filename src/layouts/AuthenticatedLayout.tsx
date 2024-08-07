@@ -16,7 +16,7 @@ const AuthenticatedLayout = () => {
 
   return (
     <div className="flex h-screen w-screen items-center justify-center">
-      <div className="w-[350px] md:w-[400px]">
+      <div className="w-[400px] md:w-[500px]">
         <Outlet />
       </div>
     </div>
