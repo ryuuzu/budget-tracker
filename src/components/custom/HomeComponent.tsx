@@ -23,6 +23,7 @@ type HomeComponentProps = {
   transactions: Transaction[];
 };
 
+// Columnds for the transaction data table
 const transactionColumns: ColumnDef<Transaction>[] = [
   { accessorKey: 'name', header: 'Name' },
   {
