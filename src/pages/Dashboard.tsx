@@ -41,7 +41,7 @@ const Dashboard = () => {
 
   // Hook to calculate total expense
   const totalExpense = useMemo(() => {
-  return transactions
+    return transactions
       .filter((transaction) => transaction.type === 'expense')
       .reduce((total, transaction) => total + transaction.amount, 0);
   }, [transactions]);
@@ -59,7 +59,6 @@ const Dashboard = () => {
 
   return (
     <div>
-      <h1>Dashboard</h1>
       <Card>
         <CardContent className="flex items-center justify-between gap-2 p-4">
           <div className="flex flex-col gap-1 p-1 text-center md:px-2 xl:gap-2 xl:px-3">

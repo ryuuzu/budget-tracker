@@ -22,6 +22,7 @@ import {
 
 import { useAuth } from '../contexts/auth-provider';
 import { useLocalStorage } from '../contexts/localstorage-provider';
+import { Card, CardContent } from '../ui/card';
 import { useToast } from '../ui/use-toast';
 import { DatePicker } from './DatePicker';
 
@@ -74,133 +75,137 @@ const AddTransactionForm = ({
   };
 
   return (
-    <Form {...transactionForm}>
-      <form
-        onSubmit={transactionForm.handleSubmit(onSubmit)}
-        className="space-y-2"
-      >
-        <FormField
-          control={transactionForm.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input placeholder="Salary" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={transactionForm.control}
-          name="amount"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Amount</FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  placeholder="1000"
-                  {...field}
-                  onChange={(event) => field.onChange(+event.target.value)}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={transactionForm.control}
-          name="date"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Date</FormLabel>
-              <FormControl>
-                <DatePicker {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={transactionForm.control}
-          name="type"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Type</FormLabel>
-              <FormControl>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Transaction Type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="income">Income</SelectItem>
-                    <SelectItem value="expense">Expense</SelectItem>
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={transactionForm.control}
-          name="reoccuring"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Reoccuring</FormLabel>
-              <FormControl>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Reoccuring Mode" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="one-time">One Time</SelectItem>
-                    <SelectItem value="daily">Daily</SelectItem>
-                    <SelectItem value="weekly">Weekly</SelectItem>
-                    <SelectItem value="monthly">Monthly</SelectItem>
-                    <SelectItem value="yearly">Yearly</SelectItem>
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={transactionForm.control}
-          name="category"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Category</FormLabel>
-              <FormControl>
-                <Input placeholder="Eating Out" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <fieldset className="space-x-2">
-          <Button
-            type="button"
-            variant={'secondary'}
-            onClick={() => {
-              closeAddPage();
-            }}
+    <Card>
+      <CardContent className='px-4 py-3'>
+        <Form {...transactionForm}>
+          <form
+            onSubmit={transactionForm.handleSubmit(onSubmit)}
+            className="space-y-2"
           >
-            Cancel
-          </Button>
-          <Button type="submit">Submit</Button>
-        </fieldset>
-      </form>
-    </Form>
+            <FormField
+              control={transactionForm.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Salary" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={transactionForm.control}
+              name="amount"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Amount</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="1000"
+                      {...field}
+                      onChange={(event) => field.onChange(+event.target.value)}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={transactionForm.control}
+              name="date"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Date</FormLabel>
+                  <FormControl>
+                    <DatePicker {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={transactionForm.control}
+              name="type"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Type</FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Transaction Type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="income">Income</SelectItem>
+                        <SelectItem value="expense">Expense</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={transactionForm.control}
+              name="reoccuring"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Reoccuring</FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Reoccuring Mode" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="one-time">One Time</SelectItem>
+                        <SelectItem value="daily">Daily</SelectItem>
+                        <SelectItem value="weekly">Weekly</SelectItem>
+                        <SelectItem value="monthly">Monthly</SelectItem>
+                        <SelectItem value="yearly">Yearly</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={transactionForm.control}
+              name="category"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Category</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Eating Out" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <fieldset className="space-x-2">
+              <Button
+                type="button"
+                variant={'secondary'}
+                onClick={() => {
+                  closeAddPage();
+                }}
+              >
+                Cancel
+              </Button>
+              <Button type="submit">Submit</Button>
+            </fieldset>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
   );
 };
 

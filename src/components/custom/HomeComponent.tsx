@@ -1,7 +1,8 @@
 import { PlusIcon } from '@radix-ui/react-icons';
+import { CrossCircledIcon } from '@radix-ui/react-icons';
 import { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { DateRange } from 'react-day-picker';
 
 import {
@@ -72,6 +73,48 @@ const HomeComponent = ({ openAddPage, transactions }: HomeComponentProps) => {
     reoccuring: null,
   });
 
+  // Filtering transactions based on search text, date range, transaction type and reoccuring mode
+  const filteredTransactions = useMemo(() => {
+    return transactions.filter((transaction) => {
+      // Filtering based on search text
+      if (
+        searchText &&
+        !transaction.name.toLowerCase().includes(searchText.toLowerCase())
+      ) {
+        return false;
+      }
+
+      // Filtering based on date range
+      if (
+        transactionFilters.dateRange &&
+        ((transactionFilters.dateRange.from &&
+          new Date(transaction.date) < transactionFilters.dateRange.from) ||
+          (transactionFilters.dateRange.to &&
+            new Date(transaction.date) > transactionFilters.dateRange.to))
+      ) {
+        return false;
+      }
+
+      // Filtering based on transaction type
+      if (
+        transactionFilters.type &&
+        transaction.type !== transactionFilters.type
+      ) {
+        return false;
+      }
+
+      // Filtering based on reoccuring mode
+      if (
+        transactionFilters.reoccuring &&
+        transaction.reoccuring !== transactionFilters.reoccuring
+      ) {
+        return false;
+      }
+
+      return true;
+    });
+  }, [transactions, searchText, transactionFilters]);
+
   return (
     <div className="space-y-4">
       <div className="flex gap-2">
@@ -85,8 +128,8 @@ const HomeComponent = ({ openAddPage, transactions }: HomeComponentProps) => {
           Add
         </Button>
       </div>
-      <div className="filters grid grid-cols-2 gap-2">
-        <div className="col-span-2">
+      <div className="filters grid grid-cols-3 gap-2">
+        <div className="col-span-3">
           <DatePickerWithRange
             dateRange={transactionFilters.dateRange}
             onDateRangeChange={(dateRange) => {
@@ -143,8 +186,29 @@ const HomeComponent = ({ openAddPage, transactions }: HomeComponentProps) => {
             </SelectContent>
           </Select>
         </div>
+        <div>
+          <Button
+            className="h-full w-full"
+            onClick={() => {
+              setTransactionFilters({
+                dateRange: undefined,
+                type: null,
+                reoccuring: null,
+              });
+            }}
+          >
+            <CrossCircledIcon />
+            Reset Filters
+          </Button>
+        </div>
       </div>
-      <DataTable columns={transactionColumns} data={transactions} />
+      <DataTable
+        columns={transactionColumns}
+        // Sorting transactions based on date in descending order
+        data={filteredTransactions.sort(
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+        )}
+      />
     </div>
   );
 };
