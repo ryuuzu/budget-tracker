@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react';
+import { createContext, useContext, useState } from 'react';
 
 import { Transaction, User } from '@/types/models';
 
@@ -7,6 +7,8 @@ type LocalStorageProviderProps = {
 };
 
 type LocalStorageProviderState = {
+  currentPage: string;
+  setCurrentPage: (page: string) => void;
   addUser: (user: User) => void;
   getUsers: () => User[];
   getTransactions: () => Transaction[];
@@ -18,6 +20,8 @@ type LocalStorageProviderState = {
 };
 
 const initialState: LocalStorageProviderState = {
+  currentPage: 'Budget Tracker',
+  setCurrentPage: () => null,
   addUser: () => null,
   getUsers: () => [],
   getTransactions: () => [],
@@ -32,11 +36,14 @@ const LocalStorageContext =
   createContext<LocalStorageProviderState>(initialState);
 
 export function LocalStorageProvider({ children }: LocalStorageProviderProps) {
+  const [currentPage, setCurrentPage] = useState('Budget Tracker');
   const get = (key: string) => localStorage.getItem(key);
   const set = (key: string, value: string) => localStorage.setItem(key, value);
   const remove = (key: string) => localStorage.removeItem(key);
 
   const value = {
+    currentPage,
+    setCurrentPage,
     getUsers: () => {
       const users = get('users');
       return users ? JSON.parse(users) : [];

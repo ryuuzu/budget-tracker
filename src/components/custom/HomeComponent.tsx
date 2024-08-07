@@ -32,7 +32,6 @@ const transactionColumns: ColumnDef<Transaction>[] = [
     header: 'Date',
     cell: ({ row }) => {
       const dateString = row.getValue('date') as string;
-      console.log(dateString);
       return format(new Date(dateString), 'PPP');
     },
   },
