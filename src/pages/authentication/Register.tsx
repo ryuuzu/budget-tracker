@@ -14,7 +14,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
 
-const RegisterPage = () => {
+const Register = () => {
   const [registrationData, setRegistrationData] = useState({
     name: '',
     email: '',
@@ -116,4 +116,4 @@ const RegisterPage = () => {
   );
 };
 
-export default RegisterPage;
+export default Register;

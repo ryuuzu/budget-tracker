@@ -14,7 +14,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
 
-const LoginPage = () => {
+const Login = () => {
   const [loginDetails, setLoginDetails] = useState({
     email: '',
     password: '',
@@ -78,4 +78,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default Login;
