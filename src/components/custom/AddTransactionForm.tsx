@@ -76,7 +76,7 @@ const AddTransactionForm = ({
 
   return (
     <Card>
-      <CardContent className='px-4 py-3'>
+      <CardContent className="px-4 py-3">
         <Form {...transactionForm}>
           <form
             onSubmit={transactionForm.handleSubmit(onSubmit)}
