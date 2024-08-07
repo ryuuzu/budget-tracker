@@ -6,18 +6,21 @@ import Dashboard from './pages/Dashboard';
 import Login from './pages/authentication/Login';
 import Register from './pages/authentication/Register';
 
-export const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <AuthenticatedLayout />,
-    children: [{ path: '/', element: <Dashboard /> }],
-  },
-  {
-    path: 'auth',
-    element: <AuthLayout />,
-    children: [
-      { path: 'login', element: <Login /> },
-      { path: 'register', element: <Register /> },
-    ],
-  },
-]);
+export const router = createBrowserRouter(
+  [
+    {
+      path: '/',
+      element: <AuthenticatedLayout />,
+      children: [{ path: '/', element: <Dashboard /> }],
+    },
+    {
+      path: 'auth',
+      element: <AuthLayout />,
+      children: [
+        { path: 'login', element: <Login /> },
+        { path: 'register', element: <Register /> },
+      ],
+    },
+  ],
+  { basename: '/budget-tracker' }
+);
