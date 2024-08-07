@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 
-import { User } from '@/types/models';
+import { Transaction, User } from '@/types/models';
 
 type LocalStorageProviderProps = {
   children: React.ReactNode;
@@ -9,11 +9,23 @@ type LocalStorageProviderProps = {
 type LocalStorageProviderState = {
   addUser: (user: User) => void;
   getUsers: () => User[];
+  getTransactions: () => Transaction[];
+  getTransactionsOfUser: (email: string) => Transaction[];
+  addTransaction: (transaction: Transaction) => void;
+  addLoggedInUser: (user: User) => void;
+  getLoggedInUser: () => User | null;
+  removeLoggedInUser: () => void;
 };
 
 const initialState: LocalStorageProviderState = {
   addUser: () => null,
   getUsers: () => [],
+  getTransactions: () => [],
+  getTransactionsOfUser: () => [],
+  addTransaction: () => null,
+  addLoggedInUser: () => null,
+  getLoggedInUser: () => null,
+  removeLoggedInUser: () => null,
 };
 
 const LocalStorageContext =
@@ -33,6 +45,31 @@ export function LocalStorageProvider({ children }: LocalStorageProviderProps) {
       const users = value.getUsers();
       users.push(user);
       set('users', JSON.stringify(users));
+    },
+    getTransactions: () => {
+      const transactions = get('transactions');
+      return transactions ? JSON.parse(transactions) : [];
+    },
+    getTransactionsOfUser: (email: string) => {
+      const transactions = value.getTransactions();
+      return transactions.filter(
+        (transaction: Transaction) => transaction.user === email
+      );
+    },
+    addTransaction: (transaction: Transaction) => {
+      const transactions = value.getTransactions();
+      transactions.push(transaction);
+      set('transactions', JSON.stringify(transactions));
+    },
+    addLoggedInUser: (user: User) => {
+      set('loggedInUser', JSON.stringify(user));
+    },
+    getLoggedInUser: () => {
+      const user = get('loggedInUser');
+      return user ? JSON.parse(user) : null;
+    },
+    removeLoggedInUser: () => {
+      remove('loggedInUser');
     },
   };
 

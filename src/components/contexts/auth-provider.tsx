@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 
 import { User } from '@/types/models';
 
@@ -25,9 +25,15 @@ const initialState: AuthProviderState = {
 const AuthProviderContext = createContext<AuthProviderState>(initialState);
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState<User | null>(null);
+  const {
+    getUsers,
+    addUser,
+    addLoggedInUser,
+    getLoggedInUser,
+    removeLoggedInUser,
+  } = useLocalStorage();
 
-  const { getUsers, addUser } = useLocalStorage();
+  const [user, setUser] = useState<User | null>(getLoggedInUser());
 
   const loginUser = (email: string, password: string) => {
     const users = getUsers();
@@ -38,6 +44,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
 
     setUser({ ...user, password: null });
+    addLoggedInUser({ ...user, password: null });
   };
 
   const registerUser = (name: string, email: string, password: string) => {
@@ -50,10 +57,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
     addUser({ name, email, password });
 
     setUser({ name, email, password: null });
+    addLoggedInUser({ name, email, password: null });
   };
 
   const logoutUser = () => {
     setUser(null);
+    removeLoggedInUser();
   };
 
   const value = {
