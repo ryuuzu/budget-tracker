@@ -99,8 +99,11 @@ export function DataTable<TData, TValue>({
       </div>
       <div className="flex items-center justify-between py-4">
         <span className="text-xs">
-          Page {table.getState().pagination.pageIndex + 1} of{' '}
-          {table.getPageCount()}
+          Page{' '}
+          {table.getPageCount() > 0
+            ? table.getState().pagination.pageIndex + 1
+            : table.getPageCount()}{' '}
+          of {table.getPageCount()}
         </span>
         <div className="flex items-center space-x-2">
           <Select

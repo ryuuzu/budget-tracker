@@ -60,20 +60,20 @@ const Dashboard = () => {
   return (
     <div>
       <Card>
-        <CardContent className="flex items-center justify-between gap-2 p-4">
+        <CardContent className="flex items-center justify-between gap-2 p-4 text-xs md:text-base">
           <div className="flex flex-col gap-1 p-1 text-center md:px-2 xl:gap-2 xl:px-3">
             <div className="font-medium">Total Income</div>
-            <div className="text-2xl font-bold">{totalIncome}</div>
+            <div className="text-lg font-bold md:text-2xl">{totalIncome}</div>
           </div>
           <Separator orientation="vertical" className="h-5 xl:h-8" />
           <div className="flex flex-col gap-1 p-1 text-center md:px-2 xl:gap-2 xl:px-3">
             <div className="font-medium">Total Expense</div>
-            <div className="text-2xl font-bold">{totalExpense}</div>
+            <div className="text-lg font-bold md:text-2xl">{totalExpense}</div>
           </div>
           <Separator orientation="vertical" className="h-5 xl:h-8" />
           <div className="flex flex-col gap-1 p-1 text-center md:px-2 xl:gap-2 xl:px-3">
             <div className="font-medium">Balance</div>
-            <div className="text-2xl font-bold">{balance}</div>
+            <div className="text-lg font-bold md:text-2xl">{balance}</div>
           </div>
         </CardContent>
       </Card>
