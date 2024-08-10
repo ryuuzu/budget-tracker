@@ -24,4 +24,4 @@ The application also includes the following features:
 - Income and Expense Management
 - Summary Statistics
 
-The [user manual](./user-manual.md) provides detailed instructions on how to use the application.
+The [user manual](./user-manual.md) provides detailed instructions on how to use the application. The [implementations](./implementations.md) document provides an overview of the technologies and libraries used to implement the application.
