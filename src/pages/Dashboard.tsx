@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useAuth } from '@/components/contexts/auth-provider';
 import { useLocalStorage } from '@/components/contexts/localstorage-provider';
@@ -53,9 +53,25 @@ const Dashboard = () => {
   );
 
   const [isAddPageOpen, setIsAddPageOpen] = useState(false);
+  const [formMode, setFormMode] = useState('create');
+  const [activeTransaction, setActiveTransaction] = useState<
+    Transaction | undefined
+  >(undefined);
 
   const openAddPage = () => setIsAddPageOpen(true);
-  const closeAddPage = () => setIsAddPageOpen(false);
+  const openEditPage = useCallback(
+    (transaction: Transaction) => {
+      setActiveTransaction(transaction);
+      setFormMode('edit');
+      setIsAddPageOpen(true);
+    },
+    [setActiveTransaction, setFormMode, setIsAddPageOpen]
+  );
+  const closeAddPage = () => {
+    setActiveTransaction(undefined);
+    setFormMode('create');
+    setIsAddPageOpen(false);
+  };
 
   return (
     <div>
@@ -79,9 +95,19 @@ const Dashboard = () => {
       </Card>
       <Separator className="my-4" />
       {isAddPageOpen ? (
-        <AddTransactionForm refreshFunc={refresh} closeAddPage={closeAddPage} />
+        <AddTransactionForm
+          refreshFunc={refresh}
+          closeAddPage={closeAddPage}
+          mode={formMode}
+          activeTransaction={activeTransaction}
+        />
       ) : (
-        <HomeComponent openAddPage={openAddPage} transactions={transactions} />
+        <HomeComponent
+          openAddPage={openAddPage}
+          transactions={transactions}
+          openEditPage={openEditPage}
+          refreshFunc={refresh}
+        />
       )}
     </div>
   );

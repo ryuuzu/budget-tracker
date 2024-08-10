@@ -1,10 +1,30 @@
+import { DialogClose } from '@radix-ui/react-dialog';
 import { PlusIcon } from '@radix-ui/react-icons';
 import { CrossCircledIcon } from '@radix-ui/react-icons';
 import { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
+import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { DateRange } from 'react-day-picker';
 
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import {
   Select,
   SelectContent,
@@ -14,53 +34,25 @@ import {
 } from '@/components/ui/select';
 import { Transaction } from '@/types/models';
 
-import { Button } from '../ui/button';
+import { useLocalStorage } from '../contexts/localstorage-provider';
 import { Input } from '../ui/input';
 import { DataTable } from './DataTable';
 import { DatePickerWithRange } from './DatePickerRange';
 
 type HomeComponentProps = {
   openAddPage: () => void;
+  openEditPage: (transaction: Transaction) => void;
   transactions: Transaction[];
+  refreshFunc: () => void;
 };
 
-// Columnds for the transaction data table
-const transactionColumns: ColumnDef<Transaction>[] = [
-  { accessorKey: 'name', header: 'Name' },
-  {
-    accessorKey: 'date',
-    header: 'Date',
-    cell: ({ row }) => {
-      const dateString = row.getValue('date') as string;
-      return format(new Date(dateString), 'PPP');
-    },
-  },
-  {
-    accessorKey: 'type',
-    header: 'Type',
-    cell: ({ row }) => {
-      const typeValue = row.getValue('type') as 'income' | 'expense';
-      return typeValue === 'income' ? 'Income' : 'Expense';
-    },
-  },
-  {
-    accessorKey: 'reoccuring',
-    header: 'Reoccuring',
-    cell: ({ row }) => {
-      const reoccuringValue = row.getValue('reoccuring') as
-        | 'one-time'
-        | 'daily'
-        | 'weekly'
-        | 'monthly'
-        | 'yearly';
-      return reoccuringValue === 'one-time'
-        ? 'One Time'
-        : reoccuringValue.charAt(0).toUpperCase() + reoccuringValue.slice(1);
-    },
-  },
-];
-
-const HomeComponent = ({ openAddPage, transactions }: HomeComponentProps) => {
+const HomeComponent = ({
+  openAddPage,
+  transactions,
+  openEditPage,
+  refreshFunc,
+}: HomeComponentProps) => {
+  const { deleteTransaction } = useLocalStorage();
   const [searchText, setSearchText] = useState('');
   const [transactionFilters, setTransactionFilters] = useState<{
     dateRange: DateRange | undefined;
@@ -71,6 +63,97 @@ const HomeComponent = ({ openAddPage, transactions }: HomeComponentProps) => {
     type: null,
     reoccuring: null,
   });
+
+  // Columnds for the transaction data table
+  const transactionColumns: ColumnDef<Transaction>[] = [
+    // { accessorKey: 'id', header: 'ID' },
+    { accessorKey: 'name', header: 'Name' },
+    {
+      accessorKey: 'date',
+      header: 'Date',
+      cell: ({ row }) => {
+        const dateString = row.getValue('date') as string;
+        return format(new Date(dateString), 'PPP');
+      },
+    },
+    { accessorKey: 'amount', header: 'Amount' },
+    {
+      accessorKey: 'type',
+      header: 'Type',
+      cell: ({ row }) => {
+        const typeValue = row.getValue('type') as 'income' | 'expense';
+        return typeValue === 'income' ? 'Income' : 'Expense';
+      },
+    },
+    {
+      accessorKey: 'reoccuring',
+      header: 'Reoccuring',
+      cell: ({ row }) => {
+        const reoccuringValue = row.getValue('reoccuring') as
+          | 'one-time'
+          | 'daily'
+          | 'weekly'
+          | 'monthly'
+          | 'yearly';
+        return reoccuringValue === 'one-time'
+          ? 'One Time'
+          : reoccuringValue.charAt(0).toUpperCase() + reoccuringValue.slice(1);
+      },
+    },
+    {
+      id: 'actions',
+      header: 'Actions',
+      cell: ({ row }) => {
+        const transaction = row.original;
+
+        return (
+          <div className="space-x-2">
+            <Button
+              variant="outline"
+              className="h-8 w-8 p-0"
+              onClick={() => openEditPage(transaction)}
+            >
+              <span className="sr-only">Open menu</span>
+              <Pencil className="h-4 w-4" />
+            </Button>
+            <Dialog>
+              <DialogTrigger>
+                <Button variant="outline" className="h-8 w-8 p-0">
+                  <span className="sr-only">Open menu</span>
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Are you absolutely sure?</DialogTitle>
+                  <DialogDescription>
+                    This action cannot be undone. This will permanently delete
+                    the transaction.
+                  </DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                  <DialogClose asChild>
+                    <Button variant="outline">Cancel</Button>
+                  </DialogClose>
+                  <DialogClose asChild>
+                    <Button
+                      variant="destructive"
+                      onClick={() => {
+                        deleteTransaction(transaction);
+                        refreshFunc();
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  </DialogClose>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>
+        );
+      },
+    },
+  ];
 
   // Filtering transactions based on search text, date range, transaction type and reoccuring mode
   const filteredTransactions = useMemo(() => {

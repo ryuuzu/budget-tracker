@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
@@ -19,16 +20,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Transaction } from '@/types/models';
 
 import { useAuth } from '../contexts/auth-provider';
 import { useLocalStorage } from '../contexts/localstorage-provider';
-import { Card, CardContent } from '../ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { useToast } from '../ui/use-toast';
 import { DatePicker } from './DatePicker';
 
 type AddTransactionFormProps = {
+  mode: string;
   refreshFunc: () => void;
   closeAddPage: () => void;
+  activeTransaction?: Transaction;
 };
 
 const transactionFormSchema = z.object({
@@ -41,41 +45,61 @@ const transactionFormSchema = z.object({
 });
 
 const AddTransactionForm = ({
+  mode = 'create',
   refreshFunc,
   closeAddPage,
+  activeTransaction,
 }: AddTransactionFormProps) => {
   const { user } = useAuth();
   const { toast } = useToast();
-  const { addTransaction } = useLocalStorage();
+  const { addTransaction, editTransaction } = useLocalStorage();
 
   const transactionForm = useForm<z.infer<typeof transactionFormSchema>>({
     resolver: zodResolver(transactionFormSchema),
     defaultValues: {
       amount: 0,
-      date: new Date(),
       type: 'income',
       reoccuring: 'one-time',
+      ...activeTransaction,
+      date: activeTransaction ? new Date(activeTransaction.date) : new Date(),
     },
   });
 
   const onSubmit = (values: z.infer<typeof transactionFormSchema>) => {
-    console.log(values);
     if (!user) return;
-    addTransaction({
-      ...values,
-      date: values.date.toISOString(),
-      user: user.email,
-    });
-    toast({
-      title: 'Transaction Added',
-      description: 'Transaction has been added successfully',
-    });
+    if (mode === 'edit' && activeTransaction) {
+      editTransaction({
+        ...activeTransaction,
+        ...values,
+        date: values.date.toISOString(),
+      });
+      toast({
+        title: 'Transaction Updated',
+        description: 'Transaction has been updated successfully',
+      });
+    } else {
+      addTransaction({
+        ...values,
+        date: values.date.toISOString(),
+        user: user.email,
+        id: uuidv4(),
+      });
+      toast({
+        title: 'Transaction Added',
+        description: 'Transaction has been added successfully',
+      });
+    }
     refreshFunc();
     closeAddPage();
   };
 
   return (
     <Card>
+      <CardHeader>
+        <CardTitle>
+          {mode === 'edit' ? 'Edit Transaction' : 'Add Transaction'}
+        </CardTitle>
+      </CardHeader>
       <CardContent className="px-4 py-3">
         <Form {...transactionForm}>
           <form

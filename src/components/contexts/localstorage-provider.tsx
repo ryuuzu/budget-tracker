@@ -14,6 +14,8 @@ type LocalStorageProviderState = {
   getTransactions: () => Transaction[];
   getTransactionsOfUser: (email: string) => Transaction[];
   addTransaction: (transaction: Transaction) => void;
+  editTransaction: (transaction: Transaction) => void;
+  deleteTransaction: (transaction: Transaction) => void;
   addLoggedInUser: (user: User) => void;
   getLoggedInUser: () => User | null;
   removeLoggedInUser: () => void;
@@ -27,6 +29,8 @@ const initialState: LocalStorageProviderState = {
   getTransactions: () => [],
   getTransactionsOfUser: () => [],
   addTransaction: () => null,
+  editTransaction: () => null,
+  deleteTransaction: () => null,
   addLoggedInUser: () => null,
   getLoggedInUser: () => null,
   removeLoggedInUser: () => null,
@@ -66,6 +70,18 @@ export function LocalStorageProvider({ children }: LocalStorageProviderProps) {
     addTransaction: (transaction: Transaction) => {
       const transactions = value.getTransactions();
       transactions.push(transaction);
+      set('transactions', JSON.stringify(transactions));
+    },
+    editTransaction: (transaction: Transaction) => {
+      const transactions = value.getTransactions();
+      const index = transactions.findIndex((t) => t.id === transaction.id);
+      transactions[index] = transaction;
+      set('transactions', JSON.stringify(transactions));
+    },
+    deleteTransaction: (transaction: Transaction) => {
+      const transactions = value.getTransactions();
+      const index = transactions.findIndex((t) => t.id === transaction.id);
+      transactions.splice(index, 1);
       set('transactions', JSON.stringify(transactions));
     },
     addLoggedInUser: (user: User) => {

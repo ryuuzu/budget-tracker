@@ -29,7 +29,7 @@ const AuthenticatedLayout = () => {
 
   return (
     <div className="flex h-screen w-screen items-center justify-center">
-      <div className="w-4/5 md:w-[500px]">
+      <div className="w-4/5 md:w-[600px]">
         <Card className="mb-4">
           <CardContent className="flex flex-col items-center justify-between px-4 py-2 md:flex-row">
             <div className="flex h-5 items-center gap-1 text-sm">
